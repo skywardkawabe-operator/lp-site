@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EC受注管理システム｜株式会社CCW</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+
+/* ─── RESET ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+/* ─── TOKENS ─── */
+:root {
+  --blue:       #4a90d9;
+  --blue-light: #6aaee8;
+  --blue-pale:  #ddeaf8;
+  --blue-muted: #e8f1fb;
+  --slate:      #3d5a80;
+  --slate-mid:  #4e6d94;
+  --text:       #2c3e50;
+  --text-sub:   #546e7a;
+  --text-light: #90a4ae;
+  --bg:         #f4f8fd;
+  --bg-white:   #ffffff;
+  --border:     #d6e4f0;
+  --shadow-sm:  0 2px 8px rgba(74,144,217,.10);
+  --shadow-md:  0 6px 24px rgba(74,144,217,.13);
+  --shadow-lg:  0 12px 40px rgba(74,144,217,.15);
+  --radius:     12px;
+  --max-w:      980px;
+}
+
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.8;
+  font-size: 15px;
+}
+
+/* ─── HEADER ─── */
+header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  background: rgba(255,255,255,0.97);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  height: 68px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 5%;
+  box-shadow: var(--shadow-sm);
+}
+.logo-wrap {
+  display: flex; align-items: center; gap: 0.6rem;
+  text-decoration: none;
+}
+.logo-mark {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--blue), var(--slate));
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.logo-mark svg { width: 20px; height: 20px; fill: #fff; }
+.logo-text {
+  display: flex; flex-direction: column; line-height: 1.15;
+}
+.logo-company {
+  font-size: 1.15rem; font-weight: 900;
+  color: var(--slate);
+  letter-spacing: 0.03em;
+}
+.logo-product {
+  font-size: 0.62rem; font-weight: 500;
+  color: var(--text-light);
+  letter-spacing: 0.06em;
+}
+nav ul { display: flex; gap: 1.75rem; list-style: none; align-items: center; }
+nav a {
+  color: var(--text-sub);
+  text-decoration: none; font-size: 0.8rem; font-weight: 500;
+  transition: color 0.2s;
+}
+nav a:hover { color: var(--blue); }
+.nav-cta {
+  background: var(--blue) !important;
+  color: #fff !important;
+  padding: 0.48rem 1.25rem;
+  border-radius: 50px !important;
+  font-weight: 700 !important;
+  font-size: 0.8rem !important;
+  transition: background 0.2s, transform 0.15s !important;
+  box-shadow: 0 3px 10px rgba(74,144,217,.35);
+}
+.nav-cta:hover { background: var(--slate) !important; transform: translateY(-1px) !important; }
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 100vh;
+  background: linear-gradient(150deg, #e8f2fc 0%, #f0f6ff 40%, #ddeaf8 100%);
+  display: flex; align-items: center;
+  padding: 120px 5% 80px;
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; top: -120px; right: -100px;
+  width: 600px; height: 600px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(74,144,217,.10) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero::after {
+  content: '';
+  position: absolute; bottom: -80px; left: -80px;
+  width: 400px; height: 400px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(78,109,148,.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-inner {
+  max-width: var(--max-w); margin: 0 auto; width: 100%;
+  position: relative; z-index: 1;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: rgba(74,144,217,.12);
+  border: 1px solid rgba(74,144,217,.28);
+  color: var(--blue);
+  font-size: 0.75rem; font-weight: 700;
+  padding: 0.35rem 1rem; border-radius: 50px;
+  letter-spacing: 0.05em; margin-bottom: 2rem;
+}
+.hero-badge::before {
+  content: ''; width: 7px; height: 7px; border-radius: 50%;
+  background: var(--blue);
+  animation: blink 2s infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+.hero h1 {
+  font-size: clamp(1.9rem, 4vw, 2.9rem);
+  font-weight: 900; color: var(--slate);
+  line-height: 1.4; margin-bottom: 1.25rem;
+  letter-spacing: -0.01em;
+}
+.hero h1 span { color: var(--blue); }
+.hero-sub {
+  font-size: 1rem; color: var(--text-sub);
+  line-height: 1.9; margin-bottom: 2.5rem;
+  max-width: 560px;
+}
+.hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 3.5rem; }
+.btn-main {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: var(--blue); color: #fff;
+  font-weight: 700; font-size: 0.95rem;
+  padding: 0.9rem 2.2rem; border-radius: 50px;
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(74,144,217,.4);
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+.btn-main:hover { background: var(--slate); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(74,144,217,.35); }
+.btn-sub {
+  display: inline-flex; align-items: center;
+  border: 1.5px solid var(--blue);
+  color: var(--blue); background: transparent;
+  font-weight: 600; font-size: 0.95rem;
+  padding: 0.9rem 2.2rem; border-radius: 50px;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+.btn-sub:hover { background: var(--blue); color: #fff; }
+
+.hero-kpi {
+  display: flex; gap: 2rem; flex-wrap: wrap;
+}
+.kpi-item {
+  background: var(--bg-white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.75rem;
+  box-shadow: var(--shadow-sm);
+  text-align: center; min-width: 130px;
+}
+.kpi-num {
+  display: block; font-size: 1.9rem; font-weight: 900;
+  color: var(--blue); line-height: 1;
+}
+.kpi-lbl { font-size: 0.72rem; color: var(--text-light); margin-top: 0.3rem; }
+
+/* ─── SECTION BASE ─── */
+section { padding: 88px 5%; }
+.sec-inner { max-width: var(--max-w); margin: 0 auto; }
+.sec-label {
+  display: inline-block;
+  background: var(--blue-muted);
+  color: var(--blue);
+  font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 0.28rem 0.85rem; border-radius: 50px;
+  margin-bottom: 0.75rem;
+  border: 1px solid var(--blue-pale);
+}
+.sec-title {
+  font-size: clamp(1.35rem, 2.5vw, 1.8rem);
+  font-weight: 800; color: var(--slate);
+  line-height: 1.4; margin-bottom: 0.6rem;
+}
+.sec-lead {
+  font-size: 0.92rem; color: var(--text-sub);
+  line-height: 1.85; max-width: 620px;
+  margin-bottom: 2.5rem;
+}
+.sec-rule {
+  width: 36px; height: 3px;
+  background: linear-gradient(90deg, var(--blue), var(--blue-light));
+  border-radius: 2px; margin-bottom: 1.25rem;
+}
+
+/* ─── OVERVIEW ─── */
+#overview { background: var(--bg-white); }
+.ov-grid {
+  display: grid; grid-template-columns: 1fr 1.1fr; gap: 3rem; align-items: center;
+}
+.ov-visual {
+  background: linear-gradient(135deg, var(--slate) 0%, #3a5275 100%);
+  border-radius: 16px; padding: 2rem;
+  box-shadow: var(--shadow-lg);
+}
+.ov-visual-head { font-size: 0.65rem; color: var(--blue-light); letter-spacing: 0.1em; margin-bottom: 0.3rem; }
+.ov-visual-sub { font-size: 0.85rem; color: rgba(255,255,255,.75); margin-bottom: 1.5rem; }
+.ov-bars { display: flex; flex-direction: column; gap: 0.65rem; }
+.ov-row { display: flex; align-items: center; gap: 0.65rem; }
+.ov-lbl { font-size: 0.68rem; color: rgba(255,255,255,.5); width: 86px; flex-shrink: 0; }
+.ov-track { flex: 1; height: 6px; background: rgba(255,255,255,.1); border-radius: 3px; overflow: hidden; }
+.ov-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--blue-light), #91c8f5); }
+.ov-cnt { font-size: 0.68rem; color: rgba(255,255,255,.4); width: 34px; text-align: right; flex-shrink: 0; }
+.ov-chips { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 1.5rem; }
+.ov-chip {
+  font-size: 0.67rem; color: var(--blue-light);
+  border: 1px solid rgba(110,174,232,.3);
+  padding: 0.2rem 0.65rem; border-radius: 20px;
+}
+.ov-text p { font-size: 0.88rem; color: var(--text-sub); line-height: 1.9; margin-bottom: 0.75rem; }
+.check-list { list-style: none; margin-top: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.check-list li {
+  display: flex; gap: 0.55rem; font-size: 0.87rem; color: var(--text); align-items: flex-start;
+}
+.check-list li::before { content: '✓'; color: var(--blue); font-weight: 700; flex-shrink: 0; }
+
+/* ─── FEATURES ─── */
+#features { background: var(--bg); }
+.feat-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem;
+}
+.feat-card {
+  background: var(--bg-white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem 1rem;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative; overflow: hidden;
+}
+.feat-card::after {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--blue), var(--blue-light));
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.3s;
+}
+.feat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+.feat-card:hover::after { transform: scaleX(1); }
+.feat-no { font-size: 0.62rem; font-weight: 700; color: var(--blue); letter-spacing: 0.06em; margin-bottom: 0.4rem; }
+.feat-icon { font-size: 1.45rem; margin-bottom: 0.5rem; display: block; }
+.feat-card h3 { font-size: 0.85rem; font-weight: 700; color: var(--slate); margin-bottom: 0.3rem; }
+.feat-card p { font-size: 0.76rem; color: var(--text-sub); line-height: 1.65; }
+
+/* ─── BENEFITS ─── */
+#benefits { background: var(--bg-white); }
+.ben-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+.ben-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--blue);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 1.5rem 1.75rem;
+  display: flex; gap: 1.25rem; align-items: flex-start;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s;
+}
+.ben-card:hover { box-shadow: var(--shadow-md); }
+.ben-no { font-size: 1.6rem; font-weight: 900; color: var(--blue-pale); line-height: 1; flex-shrink: 0; }
+.ben-card h3 { font-size: 0.92rem; font-weight: 700; color: var(--slate); margin-bottom: 0.35rem; }
+.ben-card p { font-size: 0.83rem; color: var(--text-sub); line-height: 1.75; }
+
+/* ─── CASES ─── */
+#cases { background: var(--bg); }
+.case-card {
+  background: var(--bg-white);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2.5rem;
+  box-shadow: var(--shadow-md);
+  display: grid; grid-template-columns: auto 1fr; gap: 2.5rem; align-items: center;
+}
+.case-avatar {
+  width: 80px; height: 80px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue-pale), var(--blue-muted));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2rem; flex-shrink: 0;
+  border: 3px solid var(--border);
+}
+.case-tag {
+  display: inline-block;
+  background: var(--blue-muted); color: var(--blue);
+  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em;
+  padding: 0.22rem 0.75rem; border-radius: 50px;
+  margin-bottom: 0.6rem; border: 1px solid var(--blue-pale);
+}
+.case-card h3 { font-size: 0.95rem; font-weight: 700; color: var(--slate); margin-bottom: 0.6rem; }
+.case-quote {
+  font-size: 0.88rem; color: var(--text-sub);
+  line-height: 1.85; font-style: italic;
+  border-left: 3px solid var(--blue);
+  padding-left: 1rem; margin-bottom: 1.25rem;
+}
+.case-metrics { display: flex; gap: 2rem; flex-wrap: wrap; }
+.case-metric .num { display: block; font-size: 1.5rem; font-weight: 800; color: var(--blue); line-height: 1; }
+.case-metric .lbl { font-size: 0.7rem; color: var(--text-light); margin-top: 0.2rem; }
+
+/* ─── PRICING ─── */
+#pricing { background: var(--bg-white); }
+.price-box {
+  max-width: 620px; margin: 0 auto;
+  background: var(--bg-white);
+  border: 2px solid var(--blue);
+  border-radius: 16px; overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+.price-head {
+  background: linear-gradient(135deg, var(--slate), var(--slate-mid));
+  padding: 2rem 2.25rem;
+}
+.price-plan-name { font-size: 0.7rem; color: rgba(255,255,255,.5); letter-spacing: 0.1em; margin-bottom: 0.4rem; }
+.price-head h3 { font-size: 0.95rem; font-weight: 600; color: rgba(255,255,255,.85); margin-bottom: 1.5rem; }
+.price-row { display: flex; gap: 2.5rem; flex-wrap: wrap; align-items: flex-end; }
+.price-item .p-unit { font-size: 0.68rem; color: rgba(255,255,255,.45); margin-bottom: 0.15rem; }
+.price-item .p-num { font-size: 2.2rem; font-weight: 800; color: #fff; line-height: 1; }
+.price-item .p-num sup { font-size: 1rem; font-weight: 400; }
+.price-item .p-num sub { font-size: 0.82rem; font-weight: 400; }
+.price-item.incl .p-num { font-size: 1.35rem; color: rgba(255,255,255,.55); }
+.price-period { font-size: 0.78rem; color: rgba(255,255,255,.38); margin-top: 0.9rem; }
+.price-body { padding: 2rem 2.25rem; }
+.price-body h4 { font-size: 0.73rem; font-weight: 700; color: var(--slate); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1rem; }
+.price-list { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; margin-bottom: 1.75rem; }
+.price-list li { display: flex; gap: 0.55rem; font-size: 0.86rem; color: var(--text-sub); align-items: flex-start; }
+.price-list li::before { content: '✓'; color: var(--blue); font-weight: 700; flex-shrink: 0; }
+.price-cta {
+  display: block; text-align: center;
+  background: var(--blue); color: #fff;
+  font-weight: 700; font-size: 0.95rem;
+  padding: 0.95rem; border-radius: 50px;
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(74,144,217,.35);
+  transition: background 0.2s, transform 0.15s;
+}
+.price-cta:hover { background: var(--slate); transform: translateY(-2px); }
+.price-note { text-align: center; margin-top: 1.1rem; font-size: 0.76rem; color: var(--text-light); }
+
+/* ─── COMPANY ─── */
+#company { background: var(--bg); }
+.comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: start; }
+.comp-table { width: 100%; border-collapse: collapse; background: var(--bg-white); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); }
+.comp-table th, .comp-table td {
+  padding: 0.8rem 1.1rem; font-size: 0.85rem;
+  text-align: left; border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.comp-table tr:last-child th, .comp-table tr:last-child td { border-bottom: none; }
+.comp-table th { width: 38%; color: var(--text-sub); font-weight: 500; background: var(--bg); white-space: nowrap; }
+.comp-table td { color: var(--text); }
+.subsidy-box {
+  background: linear-gradient(135deg, var(--slate), var(--slate-mid));
+  border-radius: 16px; padding: 2rem;
+  box-shadow: var(--shadow-md);
+}
+.subsidy-box h3 { font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem; }
+.subsidy-box > p { font-size: 0.84rem; color: rgba(255,255,255,.65); line-height: 1.8; margin-bottom: 1.5rem; }
+.subsidy-list { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; }
+.subsidy-list li { display: flex; gap: 0.55rem; font-size: 0.84rem; color: rgba(255,255,255,.8); align-items: flex-start; }
+.subsidy-list li::before { content: '▶'; color: var(--blue-light); font-size: 0.52rem; margin-top: 0.45rem; flex-shrink: 0; }
+
+/* ─── CTA STRIP ─── */
+.cta-strip {
+  background: linear-gradient(135deg, var(--blue) 0%, var(--slate) 100%);
+  padding: 64px 5%; text-align: center;
+}
+.cta-strip h2 { font-size: clamp(1.35rem, 2.5vw, 1.8rem); font-weight: 800; color: #fff; margin-bottom: 0.5rem; }
+.cta-strip p { color: rgba(255,255,255,.72); font-size: 0.93rem; margin-bottom: 2rem; }
+.cta-strip .btn-main { background: #fff; color: var(--blue); box-shadow: 0 4px 20px rgba(0,0,0,.15); }
+.cta-strip .btn-main:hover { background: var(--blue-muted); color: var(--slate); }
+
+/* ─── CONTACT ─── */
+#contact { background: var(--bg); }
+.contact-wrap {
+  max-width: 620px; margin: 0 auto;
+  background: var(--bg-white);
+  border: 1px solid var(--border);
+  border-radius: 16px; padding: 2.5rem;
+  box-shadow: var(--shadow-md);
+}
+.contact-info-row {
+  display: flex; flex-direction: column; gap: 0.45rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.75rem;
+  border-bottom: 1px solid var(--border);
+}
+.ci { font-size: 0.87rem; color: var(--text-sub); }
+.ci strong { color: var(--slate); font-weight: 600; margin-right: 0.4rem; }
+
+/* form */
+.form-group { margin-bottom: 1.25rem; }
+.form-group label {
+  display: block; font-size: 0.82rem; font-weight: 600;
+  color: var(--slate); margin-bottom: 0.4rem;
+}
+.form-group label span { color: #e53e3e; margin-left: 0.2rem; font-size: 0.72rem; }
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 0.88rem; color: var(--text);
+  background: var(--bg);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(74,144,217,.15);
+  background: #fff;
+}
+.form-group textarea { resize: vertical; min-height: 110px; line-height: 1.7; }
+.form-submit {
+  width: 100%;
+  background: var(--blue); color: #fff;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 700; font-size: 0.95rem;
+  padding: 0.95rem;
+  border: none; border-radius: 50px; cursor: pointer;
+  box-shadow: 0 4px 16px rgba(74,144,217,.35);
+  transition: background 0.2s, transform 0.15s;
+}
+.form-submit:hover { background: var(--slate); transform: translateY(-2px); }
+.form-note { font-size: 0.75rem; color: var(--text-light); margin-top: 0.75rem; text-align: center; }
+
+/* ─── FOOTER ─── */
+footer {
+  background: var(--slate);
+  padding: 2rem 5%; text-align: center;
+}
+footer p { font-size: 0.78rem; color: rgba(255,255,255,.45); line-height: 2; }
+footer a { color: rgba(255,255,255,.6); text-decoration: none; }
+footer a:hover { color: var(--blue-light); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  nav ul { display: none; }
+  .ov-grid { grid-template-columns: 1fr; }
+  .feat-grid { grid-template-columns: repeat(2, 1fr); }
+  .ben-grid { grid-template-columns: 1fr; }
+  .comp-grid { grid-template-columns: 1fr; }
+  .case-card { grid-template-columns: 1fr; text-align: center; }
+  .case-avatar { margin: 0 auto; }
+  .case-quote { text-align: left; }
+}
+@media (max-width: 520px) {
+  .feat-grid { grid-template-columns: 1fr; }
+  .hero-kpi { gap: 0.75rem; }
+  .kpi-item { flex: 1; min-width: 90px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<header>
+  <a class="logo-wrap" href="#">
+    <div class="logo-mark">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 7H4C2.9 7 2 7.9 2 9v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zm-1 11H5V9h14v9zM7 5h10V3H7v2z"/>
+      </svg>
+    </div>
+    <div class="logo-text">
+      <span class="logo-company">株式会社CCW</span>
+      <span class="logo-product">EC ORDER MANAGEMENT SYSTEM</span>
+    </div>
+  </a>
+  <nav>
+    <ul>
+      <li><a href="#overview">製品概要</a></li>
+      <li><a href="#features">機能一覧</a></li>
+      <li><a href="#benefits">導入メリット</a></li>
+      <li><a href="#cases">導入事例</a></li>
+      <li><a href="#pricing">料金</a></li>
+      <li><a href="#company">会社情報</a></li>
+      <li><a href="#contact" class="nav-cta">お問合わせ</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">IT導入補助金（デジタル化基盤導入枠）対象システム</div>
+    <h1>複数ECモールの受注業務を<br><span>一元管理・自動化</span>するクラウドシステム</h1>
+    <p class="hero-sub">
+      楽天・Amazon・Yahoo!等、複数モールの受注・顧客・出荷管理をクラウドで統合。<br>手作業を削減し、業務効率と正確性を向上させます。
+    </p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-main">お問合わせ →</a>
+      <a href="#overview" class="btn-sub">詳細を見る</a>
+    </div>
+    <div class="hero-kpi">
+      <div class="kpi-item">
+        <span class="kpi-num">5</span>
+        <span class="kpi-lbl">モール同時連携</span>
+      </div>
+      <div class="kpi-item">
+        <span class="kpi-num">約2h</span>
+        <span class="kpi-lbl">1,000件の伝票処理</span>
+      </div>
+      <div class="kpi-item">
+        <span class="kpi-num">1名</span>
+        <span class="kpi-lbl">ワンオペ運用可能</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ OVERVIEW ═══ -->
+<section id="overview">
+  <div class="sec-inner">
+    <div class="ov-grid">
+      <div class="ov-visual">
+        <div class="ov-visual-head">DASHBOARD — REALTIME</div>
+        <div class="ov-visual-sub">本日の受注状況</div>
+        <div class="ov-bars">
+          <div class="ov-row"><span class="ov-lbl">Amazon</span><div class="ov-track"><div class="ov-fill" style="width:78%"></div></div><span class="ov-cnt">312件</span></div>
+          <div class="ov-row"><span class="ov-lbl">楽天市場</span><div class="ov-track"><div class="ov-fill" style="width:55%"></div></div><span class="ov-cnt">218件</span></div>
+          <div class="ov-row"><span class="ov-lbl">Yahoo!</span><div class="ov-track"><div class="ov-fill" style="width:40%"></div></div><span class="ov-cnt">158件</span></div>
+          <div class="ov-row"><span class="ov-lbl">au PAY</span><div class="ov-track"><div class="ov-fill" style="width:22%"></div></div><span class="ov-cnt">88件</span></div>
+          <div class="ov-row"><span class="ov-lbl">dショッピング</span><div class="ov-track"><div class="ov-fill" style="width:14%"></div></div><span class="ov-cnt">56件</span></div>
+        </div>
+        <div class="ov-chips">
+          <span class="ov-chip">✓ 出荷指示 自動生成</span>
+          <span class="ov-chip">✓ API・CSV 両対応</span>
+          <span class="ov-chip">✓ 温度帯 自動判定</span>
+        </div>
+      </div>
+      <div class="ov-text">
+        <span class="sec-label">製品概要</span>
+        <h2 class="sec-title">複数ECモールの受注業務を<br>クラウドで一元管理</h2>
+        <div class="sec-rule"></div>
+        <p>
+          楽天市場・Amazon・Yahoo!ショッピング等の複数ECモールを運営する小売事業者向けに、
+          受注管理・顧客管理・出荷指示を一元化するクラウド型システムです。
+          各モールの注文情報をAPI連携またはCSV取込で自動収集します。
+        </p>
+        <p>
+          送料計算・決済管理・付帯サービスの自動付与を含む10の機能により、
+          受注から出荷までの業務プロセスを標準化・自動化します。
+        </p>
+        <ul class="check-list">
+          <li>手作業入力を削減し、ミス防止と業務効率化を同時に実現</li>
+          <li>API・CSVの両方式に対応し、既存フローのまま導入可能</li>
+          <li>IT導入補助金（業務効率化・クラウド活用）の対象要件を充足</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FEATURES ═══ -->
+<section id="features">
+  <div class="sec-inner">
+    <span class="sec-label">機能一覧</span>
+    <h2 class="sec-title">10の標準機能でEC業務を網羅</h2>
+    <div class="sec-rule"></div>
+    <p class="sec-lead">受注取込から顧客管理・出荷まで、必要な機能をオールインワンで提供します。</p>
+    <div class="feat-grid">
+      <div class="feat-card">
+        <span class="feat-no">No.01</span>
+        <span class="feat-icon">📥</span>
+        <h3>注文取込</h3>
+        <p>各モールからAPI連携またはCSV取込で注文データを自動収集。</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-no">No.02</span>
+        <span class="feat-icon">📋</span>
+        <h3>受注管理</h3>
+        <p>受付・入金待ち・発送管理など受注ステータスを一元管理。</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-no">No.03</span>
+        <span class="feat-icon">🔔</span>
+        <h3>アラート</h3>
+        <p>対応が必要な受注をナビゲーション形式で担当者へ通知。</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-no">No.04</span>
+        <span class="feat-icon">🚚</span>
+        <h3>送料計算</h3>
+        <p>配達先・商品情報をもとに送料を自動算出・反映。</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-no">No.05</span>
+        <span class="feat-icon">🎁</span>
+        <h3>おまけ計算</h3>
+        <p>購入数量などの条件に応じ、おまけ品を対象注文へ自動付与。</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-no">No.06</span>
+        <span class="feat-icon">🌡️</span>
+        <h3>温度帯計算</h3>
+        <p>商品の組み合わせから最適な配送温度帯を自動判定・提案。</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-no">No.07</span>
+        <span class="feat-icon">✉️</span>
+        <h3>メール機能</h3>
+        <p>注文確認・発送完了メールをステータス連動で自動送信。</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-no">No.08</span>
+        <span class="feat-icon">💳</span>
+        <h3>入金管理</h3>
+        <p>各決済手段の入金ステータスを自動取得し、未入金を早期検知。</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-no">No.09</span>
+        <span class="feat-icon">👥</span>
+        <h3>顧客管理</h3>
+        <p>購入回数・ブラックリスト等の顧客情報を一元管理。</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-no">No.10</span>
+        <span class="feat-icon">📄</span>
+        <h3>伝票データ出力</h3>
+        <p>送り状発行システム・WMSへの連携データを出力。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ BENEFITS ═══ -->
+<section id="benefits">
+  <div class="sec-inner">
+    <span class="sec-label">導入メリット</span>
+    <h2 class="sec-title">導入で期待できる4つの改善効果</h2>
+    <div class="sec-rule"></div>
+    <div class="ben-grid">
+      <div class="ben-card">
+        <span class="ben-no">01</span>
+        <div>
+          <h3>受注処理工数の大幅削減</h3>
+          <p>手動転記・ログイン作業を自動化。月間1,000件を1名・約2時間で処理できた実績があります。</p>
+        </div>
+      </div>
+      <div class="ben-card">
+        <span class="ben-no">02</span>
+        <div>
+          <h3>ヒューマンエラーの防止</h3>
+          <p>システムが自動チェックを行い、誤出荷・送料計算ミスなどの人的トラブルを未然に防ぎます。</p>
+        </div>
+      </div>
+      <div class="ben-card">
+        <span class="ben-no">03</span>
+        <div>
+          <h3>業務プロセスの標準化</h3>
+          <p>受注・出荷フローをシステムに統一。担当者が替わっても同品質のオペレーションを維持できます。</p>
+        </div>
+      </div>
+      <div class="ben-card">
+        <span class="ben-no">04</span>
+        <div>
+          <h3>IT導入補助金による費用軽減</h3>
+          <p>IT導入補助金（デジタル化基盤導入枠）の対象ツールとして申請可能。実質負担を抑えて導入できます。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CASES ═══ -->
+<section id="cases">
+  <div class="sec-inner">
+    <span class="sec-label">導入事例</span>
+    <h2 class="sec-title">ご利用企業の声</h2>
+    <div class="sec-rule"></div>
+    <div class="case-card">
+      <div class="case-avatar">🐟</div>
+      <div>
+        <span class="case-tag">水産加工品・食品EC</span>
+        <h3>干物とおつまみの長崎旬彩出島屋 様<br><small style="font-weight:400;font-size:0.8rem;color:var(--text-light);">Amazon・楽天・Yahoo!・au PAY・dショッピング　5モール運営</small></h3>
+        <p class="case-quote">
+          「月間1,000件の受注を、1名のオペレーターで伝票発行まで約2時間で完了できるようになりました。手動作業が大幅に削減され、処理が迅速かつ正確になりました。」
+        </p>
+        <div class="case-metrics">
+          <div class="case-metric"><span class="num">1,000件/月</span><span class="lbl">受注処理数</span></div>
+          <div class="case-metric"><span class="num">約2時間</span><span class="lbl">ワンオペ伝票処理</span></div>
+          <div class="case-metric"><span class="num">5モール</span><span class="lbl">一元管理チャネル</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PRICING ═══ -->
+<section id="pricing">
+  <div class="sec-inner">
+    <span class="sec-label">料金</span>
+    <h2 class="sec-title">シンプルな定額料金体系</h2>
+    <div class="sec-rule"></div>
+    <p class="sec-lead">IT導入補助金を活用することで、導入時の実質負担を大幅に軽減できます。</p>
+    <div class="price-box">
+      <div class="price-head">
+        <div class="price-plan-name">EC受注管理システム ／ クラウド利用料</div>
+        <h3>受注管理・決済管理・出荷管理機能を含む</h3>
+        <div class="price-row">
+          <div class="price-item">
+            <div class="p-unit">月額（税抜）</div>
+            <div class="p-num"><sup>¥</sup>133,000<sub>/月</sub></div>
+          </div>
+          <div class="price-item incl">
+            <div class="p-unit">月額（税込）</div>
+            <div class="p-num">¥146,300<span style="font-size:.78rem">/月</span></div>
+          </div>
+        </div>
+        <div class="price-period">契約期間：24ヶ月</div>
+      </div>
+      <div class="price-body">
+        <h4>提供内容</h4>
+        <ul class="price-list">
+          <li>EC受注管理機能（注文取込・ステータス管理・アラート）</li>
+          <li>決済管理機能（入金ステータス取得・管理）</li>
+          <li>出荷管理機能（送料計算・伝票データ出力・送り状連携）</li>
+          <li>付帯機能（おまけ付与・温度帯判定・顧客管理・メール自動送信）</li>
+          <li>クラウド環境・セキュリティ・保守を含む</li>
+        </ul>
+        <a href="#contact" class="price-cta">お問合わせ・資料請求</a>
+        <p class="price-note">※ IT導入補助金の適用により対象経費の一部が補助される場合があります。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ COMPANY ═══ -->
+<section id="company">
+  <div class="sec-inner">
+    <span class="sec-label">会社情報</span>
+    <h2 class="sec-title">提供企業について</h2>
+    <div class="sec-rule"></div>
+    <div class="comp-grid">
+      <div>
+        <table class="comp-table">
+          <tr><th>会社名</th><td>株式会社CCW</td></tr>
+          <tr><th>所在地</th><td>〒811-2303<br>福岡県糟屋郡粕屋町酒殿四丁目2番10号<br>SkywardHDオフィスビル</td></tr>
+          <tr><th>電話番号</th><td>092-410-8430</td></tr>
+          <tr><th>メール</th><td>info@ccward.jp</td></tr>
+          <tr><th>対応時間</th><td>平日 10:00〜18:00</td></tr>
+          <tr><th>事業内容</th><td>EC受注管理システムの開発・提供、IT導入支援</td></tr>
+        </table>
+      </div>
+      <div class="subsidy-box">
+        <h3>IT導入補助金のご活用について</h3>
+        <p>本システムは「IT導入補助金（デジタル化基盤導入枠）」の対象ツールとして申請可能です。補助金手続きについても弊社よりご案内いたします。</p>
+        <ul class="subsidy-list">
+          <li>補助金対象要件（業務効率化・クラウド活用）を充足</li>
+          <li>申請書類・情報の提供サポート</li>
+          <li>採択後の交付申請・実績報告のご案内</li>
+          <li>導入前の無料相談・デモに随時対応</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA STRIP ═══ -->
+<div class="cta-strip">
+  <h2>まずはお気軽にご相談ください</h2>
+  <p>IT導入補助金の活用方法も含め、専任担当者が丁寧にご案内いたします。</p>
+  <a href="#contact" class="btn-main">お問合わせ</a>
+</div>
+
+<!-- ═══ CONTACT ═══ -->
+<section id="contact">
+  <div class="sec-inner">
+    <span class="sec-label">お問合わせ</span>
+    <h2 class="sec-title">お問合わせ・資料請求</h2>
+    <div class="sec-rule"></div>
+    <div class="contact-wrap">
+      <div class="contact-info-row">
+        <div class="ci"><strong>メール：</strong>info@ccward.jp</div>
+        <div class="ci"><strong>電話：</strong>092-410-8430　（平日 10:00〜18:00）</div>
+        <div class="ci"><strong>所在地：</strong>〒811-2303 福岡県糟屋郡粕屋町酒殿4丁目2-10 SkywardHDオフィスビル</div>
+      </div>
+      <form onsubmit="handleSubmit(event)">
+        <div class="form-group">
+          <label>会社名<span>必須</span></label>
+          <input type="text" name="company" placeholder="株式会社〇〇" required>
+        </div>
+        <div class="form-group">
+          <label>お名前<span>必須</span></label>
+          <input type="text" name="name" placeholder="山田 太郎" required>
+        </div>
+        <div class="form-group">
+          <label>メールアドレス<span>必須</span></label>
+          <input type="email" name="email" placeholder="example@company.co.jp" required>
+        </div>
+        <div class="form-group">
+          <label>お問い合わせ内容<span>必須</span></label>
+          <textarea name="message" placeholder="ご質問・ご要件をご記入ください" required></textarea>
+        </div>
+        <button type="submit" class="form-submit">送信する →</button>
+        <p class="form-note">送信後、担当者より平日2営業日以内にご連絡いたします。</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <p>
+    株式会社CCW　〒811-2303 福岡県糟屋郡粕屋町酒殿4丁目2-10 SkywardHDオフィスビル<br>
+    TEL: 092-410-8430　／　info@ccward.jp<br>
+    © 2024 株式会社CCW. All rights reserved.　
+    <a href="https://skywardgroup.co.jp/about">会社概要</a>
+  </p>
+</footer>
+
+<script>
+function handleSubmit(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('.form-submit');
+  btn.textContent = '送信しました ✓';
+  btn.style.background = '#27ae60';
+  btn.disabled = true;
+}
+</script>
+
+</body>
+</html>
