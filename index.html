@@ -777,10 +777,18 @@ document.getElementById('contact-form').addEventListener('submit', async functio
   btn.textContent = '送信中...';
   btn.disabled = true;
   err.style.display = 'none';
+
+  /* フォームのデータをJSONオブジェクトに変換 */
+  const fd = new FormData(this);
+  const data = {};
+  fd.forEach(function(value, key) { data[key] = value; });
+  data['subject_type'] = 'お問合わせ';
+
   try {
     const res = await fetch('https://ccward.sakura.ne.jp/contact.php', {
       method: 'POST',
-      body: new FormData(this)
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
     });
     const json = await res.json();
     if (json.status === 'ok') {
@@ -793,6 +801,7 @@ document.getElementById('contact-form').addEventListener('submit', async functio
     btn.textContent = '送信する →';
     btn.disabled = false;
     err.style.display = 'block';
+    console.error(e2);
   }
 });
 </script>
