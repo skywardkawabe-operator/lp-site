@@ -662,7 +662,7 @@ footer a:hover { color: var(--blue-light); }
       <tr><th>会社名</th><td>株式会社CCW</td></tr>
       <tr><th>所在地</th><td>〒811-2303　福岡県糟屋郡粕屋町酒殿四丁目2番10号　SkywardHDオフィスビル</td></tr>
       <tr><th>電話番号</th><td>092-410-8430</td></tr>
-      <tr><th>メール</th><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="365f58505976555541574452185c46">[email&#160;protected]</a></td></tr>
+      <tr><th>メール</th><td>info@ccward.jp</td></tr>
       <tr><th>対応時間</th><td>平日 10:00〜18:00</td></tr>
       <tr><th>事業内容</th><td>システム開発、提供</td></tr>
       <tr><th>企業HP</th><td><a href="https://lp-site-three-eosin.vercel.app/" target="_blank" rel="noopener" style="color:var(--blue);text-decoration:underline;">https://skywardgroup.co.jp/</a></td></tr>
@@ -685,7 +685,6 @@ footer a:hover { color: var(--blue-light); }
     <div class="contact-wrap">
 <form id="contact-form" action="contact.php" method="POST">
         <!-- ハニーポット（スパム対策） -->
-        <input type="hidden" name="subject_type" value="SES お問合わせ">
         <div style="display:none"><input type="text" name="website" tabindex="-1" autocomplete="off"></div>
         <div class="form-group">
           <label>会社名<span>必須</span></label>
@@ -705,7 +704,7 @@ footer a:hover { color: var(--blue-light); }
         </div>
         <button type="submit" id="form-btn" class="form-submit">送信する →</button>
         <p id="form-error" style="display:none;color:#c53030;font-size:.82rem;margin-top:.75rem;text-align:center;">
-          送信に失敗しました。時間をおいて再度お試しいただくか、直接 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="325b5c545d725151455340561c5842">[email&#160;protected]</a> までご連絡ください。
+          送信に失敗しました。時間をおいて再度お試しいただくか、直接 info@ccward.jp までご連絡ください。
         </p>
       </form>
       <div class="form-msg" id="form-success">
@@ -719,11 +718,12 @@ footer a:hover { color: var(--blue-light); }
 <footer>
   <p>
     株式会社CCW　〒811-2303 福岡県糟屋郡粕屋町酒殿4丁目2-10 SkywardHDオフィスビル<br>
-    TEL: 092-410-8430　／　<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="50393e363f103333273122347e3a20">[email&#160;protected]</a><br>
+    TEL: 092-410-8430　／　info@ccward.jp<br>
     © 2024 株式会社CCW. All rights reserved.　
     <a href="https://skywardgroup.co.jp/about">会社概要</a>
   </p>
 </footer>
+
 <script>
 document.getElementById('contact-form').addEventListener('submit', async function(e) {
   e.preventDefault();
@@ -732,13 +732,10 @@ document.getElementById('contact-form').addEventListener('submit', async functio
   btn.textContent = '送信中...';
   btn.disabled = true;
   err.style.display = 'none';
-
-  var formData = new FormData(this);
-
   try {
-    var res = await fetch('https://ccward.sakura.ne.jp/contact.php', {
+    var res = await fetch('../contact.php', {
       method: 'POST',
-      body: formData
+      body: new FormData(this)
     });
     var json = await res.json();
     if (json.status === 'ok') {
@@ -751,7 +748,6 @@ document.getElementById('contact-form').addEventListener('submit', async functio
     btn.textContent = '送信する →';
     btn.disabled = false;
     err.style.display = 'block';
-    console.error(e2);
   }
 });
 </script>
