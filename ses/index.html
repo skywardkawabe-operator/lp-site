@@ -704,7 +704,7 @@ footer a:hover { color: var(--blue-light); }
         </div>
         <button type="submit" id="form-btn" class="form-submit">送信する →</button>
         <p id="form-error" style="display:none;color:#c53030;font-size:.82rem;margin-top:.75rem;text-align:center;">
-          送信に失敗しました。時間をおいて再度お試しいただくか、直接 info@ccward.jp までご連絡ください。
+          送信に失敗しました。時間をおいて再度お試しいただくか、直接 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7b12151d143b18180c1a091f55110b">[email&#160;protected]</a> までご連絡ください。
         </p>
       </form>
       <div class="form-msg" id="form-success">
@@ -718,13 +718,13 @@ footer a:hover { color: var(--blue-light); }
 <footer>
   <p>
     株式会社CCW　〒811-2303 福岡県糟屋郡粕屋町酒殿4丁目2-10 SkywardHDオフィスビル<br>
-    TEL: 092-410-8430　／　info@ccward.jp<br>
+    TEL: 092-410-8430　／　<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d4bdbab2bb94b7b7a3b5a6b0fabea4">[email&#160;protected]</a><br>
     © 2024 株式会社CCW. All rights reserved.　
     <a href="https://skywardgroup.co.jp/about">会社概要</a>
   </p>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 document.getElementById('contact-form').addEventListener('submit', async function(e) {
   e.preventDefault();
   const btn = document.getElementById('form-btn');
@@ -733,13 +733,18 @@ document.getElementById('contact-form').addEventListener('submit', async functio
   btn.disabled = true;
   err.style.display = 'none';
   try {
-    const res = await fetch('contact.php', { method: 'POST', body: new FormData(this) });
+    const res = await fetch('https://ccward.sakura.ne.jp/contact.php', {
+      method: 'POST',
+      body: new FormData(this)
+    });
     const json = await res.json();
     if (json.status === 'ok') {
       this.style.display = 'none';
       document.getElementById('form-success').classList.add('show');
-    } else { throw new Error(); }
-  } catch {
+    } else {
+      throw new Error(json.message || '送信失敗');
+    }
+  } catch(e2) {
     btn.textContent = '送信する →';
     btn.disabled = false;
     err.style.display = 'block';
