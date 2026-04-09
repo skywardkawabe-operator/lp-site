@@ -704,7 +704,7 @@ footer a:hover { color: var(--blue-light); }
         </div>
         <button type="submit" id="form-btn" class="form-submit">送信する →</button>
         <p id="form-error" style="display:none;color:#c53030;font-size:.82rem;margin-top:.75rem;text-align:center;">
-          送信に失敗しました。時間をおいて再度お試しいただくか、直接 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7b12151d143b18180c1a091f55110b">[email&#160;protected]</a> までご連絡ください。
+          送信に失敗しました。時間をおいて再度お試しいただくか、直接 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="0e676068614e6d6d796f7c6a20647e">[email&#160;protected]</a> までご連絡ください。
         </p>
       </form>
       <div class="form-msg" id="form-success">
@@ -718,7 +718,7 @@ footer a:hover { color: var(--blue-light); }
 <footer>
   <p>
     株式会社CCW　〒811-2303 福岡県糟屋郡粕屋町酒殿4丁目2-10 SkywardHDオフィスビル<br>
-    TEL: 092-410-8430　／　<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d4bdbab2bb94b7b7a3b5a6b0fabea4">[email&#160;protected]</a><br>
+    TEL: 092-410-8430　／　<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="84edeae2ebc4e7e7f3e5f6e0aaeef4">[email&#160;protected]</a><br>
     © 2024 株式会社CCW. All rights reserved.　
     <a href="https://skywardgroup.co.jp/about">会社概要</a>
   </p>
@@ -732,10 +732,18 @@ document.getElementById('contact-form').addEventListener('submit', async functio
   btn.textContent = '送信中...';
   btn.disabled = true;
   err.style.display = 'none';
+
+  /* フォームのデータをJSONオブジェクトに変換 */
+  const fd = new FormData(this);
+  const data = {};
+  fd.forEach(function(value, key) { data[key] = value; });
+  data['subject_type'] = 'SES お問合わせ';
+
   try {
     const res = await fetch('https://ccward.sakura.ne.jp/contact.php', {
       method: 'POST',
-      body: new FormData(this)
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
     });
     const json = await res.json();
     if (json.status === 'ok') {
@@ -748,6 +756,7 @@ document.getElementById('contact-form').addEventListener('submit', async functio
     btn.textContent = '送信する →';
     btn.disabled = false;
     err.style.display = 'block';
+    console.error(e2);
   }
 });
 </script>
