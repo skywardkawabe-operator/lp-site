@@ -769,7 +769,7 @@ footer {
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 document.getElementById('contact-form').addEventListener('submit', async function(e) {
   e.preventDefault();
   const btn = document.getElementById('form-btn');
@@ -778,5 +778,23 @@ document.getElementById('contact-form').addEventListener('submit', async functio
   btn.disabled = true;
   err.style.display = 'none';
   try {
-    const res = await fetch('contact.php', { method: 'POST', body: new FormData(this) });
-    const
+    const res = await fetch('https://ccward.sakura.ne.jp/contact.php', {
+      method: 'POST',
+      body: new FormData(this)
+    });
+    const json = await res.json();
+    if (json.status === 'ok') {
+      this.style.display = 'none';
+      document.getElementById('form-success').classList.add('show');
+    } else {
+      throw new Error(json.message || '送信失敗');
+    }
+  } catch(e2) {
+    btn.textContent = '送信する →';
+    btn.disabled = false;
+    err.style.display = 'block';
+  }
+});
+</script>
+</body>
+</html>
