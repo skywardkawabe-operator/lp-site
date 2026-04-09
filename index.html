@@ -723,6 +723,7 @@ footer {
     <div class="sec-rule"></div>
     <div class="contact-wrap">
       <form id="contact-form" action="contact.php" method="POST">
+        <input type="hidden" name="subject_type" value="お問合わせ">
         <div class="form-honey"><input type="text" name="website" tabindex="-1" autocomplete="off"></div>
         <div class="form-group">
           <label>会社名<span class="req">必須</span></label>
@@ -768,29 +769,23 @@ footer {
     <p class="footer-copy">© 2024 株式会社CCW. All rights reserved.</p>
   </div>
 </footer>
-
 <script>
 document.getElementById('contact-form').addEventListener('submit', async function(e) {
   e.preventDefault();
-  const btn = document.getElementById('form-btn');
-  const err = document.getElementById('form-error');
+  var btn = document.getElementById('form-btn');
+  var err = document.getElementById('form-error');
   btn.textContent = '送信中...';
   btn.disabled = true;
   err.style.display = 'none';
 
-  /* フォームのデータをJSONオブジェクトに変換 */
-  const fd = new FormData(this);
-  const data = {};
-  fd.forEach(function(value, key) { data[key] = value; });
-  data['subject_type'] = 'お問合わせ';
+  var formData = new FormData(this);
 
   try {
-    const res = await fetch('https://ccward.sakura.ne.jp/contact.php', {
+    var res = await fetch('https://ccward.sakura.ne.jp/contact.php', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+      body: formData
     });
-    const json = await res.json();
+    var json = await res.json();
     if (json.status === 'ok') {
       this.style.display = 'none';
       document.getElementById('form-success').classList.add('show');
