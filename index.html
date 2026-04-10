@@ -698,7 +698,7 @@ footer {
       <tr><th>会社名</th><td>株式会社CCW</td></tr>
       <tr><th>代表取締役</th><td>松尾 直幸</td></tr>
       <tr><th>設立</th><td>2013年7月31日</td></tr>
-      <tr><th>所在地</th><td>〒811-2303　福岡県糟屋郡粕屋町酒殿四丁目2番10号　SkywardHDオフィスビル</td></tr>
+      <tr><th>所在地</th><td>〒811-2303　福岡県糟屋郡粕屋町酒殿四丁目2番10号</td></tr>
       <tr><th>電話番号</th><td>092-410-8430</td></tr>
       <tr><th>メール</th><td>info@ccward.jp</td></tr>
       <tr><th>対応時間</th><td>平日 10:00〜18:00</td></tr>
@@ -783,18 +783,4 @@ document.getElementById('contact-form').addEventListener('submit', async functio
       body: new FormData(this)
     });
     var json = await res.json();
-    if (json.status === 'ok') {
-      this.style.display = 'none';
-      document.getElementById('form-success').classList.add('show');
-    } else {
-      throw new Error(json.message || '送信失敗');
-    }
-  } catch(e2) {
-    btn.textContent = '送信する →';
-    btn.disabled = false;
-    err.style.display = 'block';
-  }
-});
-</script>
-</body>
-</html>
+    if (json.statu
